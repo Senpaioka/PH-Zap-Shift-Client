@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+@plugin "daisyui/theme" {
+name: "light";
+default: true;
+--color-primary: #CAEB66;
+}
+
+/* settings */
+
+body {
+  font-family: "Urbanist", sans-serif;
+}
+
+.active {
+  background: #CAEB66;
+}
+
+/* font - Urbanist */
+
+
+/* 100	Thin (Hairline)
+200	Extra Light (Ultra Light)
+300	Light
+400	Normal (Regular)
+500	Medium
+600	Semi Bold (Demi Bold)
+700	Bold
+800	Extra Bold (Ultra Bold)
+900	Black (Heavy) */
+
+
+.font-u-reg {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.font-u-med {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+.font-u-bold {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+.font-u-extra {
+  font-family: "Urbanist", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
