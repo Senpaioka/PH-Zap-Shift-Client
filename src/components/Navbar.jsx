@@ -1,10 +1,15 @@
 import {Link, NavLink} from 'react-router';
+import {useAuth} from '../hooks/useAuth';
 import Logo from './Logo';
 import ButtonLink from './ButtonLink';
+import Spinner from '../components/Spinner';
+import defaultPic from '../assets/icons/dp.jpg';
 
 
 
 function Navbar() {
+
+    const {user, logoutUser} = useAuth();
 
     const menuLink = (
         <>
@@ -41,8 +46,45 @@ function Navbar() {
 
 
             <div className="navbar-end justify-center sm:justify-end space-x-7 mr-5 sm:mr-7">
-                <Link to="/auth" className="btn rounded-md font-u-bold text-base">Sign In</Link>
-                <Link to="/auth/register" className=""><ButtonLink></ButtonLink></Link>
+
+                 {
+                    user ? (
+                        <>
+                        {/* user logged in  */}
+                            <div className="dropdown dropdown-end">
+                                <div className='flex justify-center items-center'>
+                                    <div className='mr-3'>
+                                        <p className='text-base font-u-bold'>{user.displayName}</p>
+                                    </div>
+                                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                        <div className="w-12 h-auto rounded-full">
+                                            <img className="w-full h-auto" src={user?.photoURL || defaultPic} alt={user?.displayName || 'Default Profile Pic'} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul
+                                    tabIndex="-1"
+                                    className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                                    <li>
+                                    <a className="justify-between">
+                                        Profile
+                                        <span className="badge">New</span>
+                                    </a>
+                                    </li>
+                                    <li><a>Settings</a></li>
+                                    <li onClick={logoutUser} className='bg-error'><a>Logout</a></li>
+                                </ul>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/auth" className="btn rounded-md font-u-bold text-base">Sign In</Link>
+                            <Link to="/auth/register" className=""><ButtonLink></ButtonLink></Link>
+                        </>
+                    )
+                 }
+
+                
             </div>
     </div>
     );

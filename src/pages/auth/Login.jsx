@@ -15,9 +15,16 @@ function Login() {
 
 
   // gmail authentication
-  function loginWithGoogle() {
-    authenticateWithGoogle();
-    navigate(location.state || '/')
+  async function loginWithGoogle() {
+    try {
+      const result = await authenticateWithGoogle();
+      if(result?.user) {
+        navigate(location.state || '/');
+      }
+    }
+    catch (error) {
+      console.log(error.message, error);
+    }
   }
 
 

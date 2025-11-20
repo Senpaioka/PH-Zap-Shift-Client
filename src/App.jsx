@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 
 
 function App() {
+
   return (
     <>
       <div className="bg-base-300 py-8">

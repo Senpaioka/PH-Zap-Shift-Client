@@ -37,7 +37,9 @@ function AuthProvider({children}) {
     async function logoutUser() {
 
         try {
-            return await signOut(auth);
+            const exitUser =  await signOut(auth);
+            setUser(null);
+            return exitUser;
         }
         finally {
             setIsLoading(false);

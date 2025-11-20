@@ -17,9 +17,16 @@ function Register() {
 
 
   // gmail authentication
-  function registerWithGoogle() {
-    authenticateWithGoogle();
-    navigate(location.state || '/')
+  async function registerWithGoogle() {
+    try {
+      const result = await authenticateWithGoogle();
+      if(result?.user) {
+        navigate(location.state || '/');
+      }
+    }
+    catch (error) {
+      console.log(error.message, error);
+    }
   }
 
   const onSubmit = async (data) => {
