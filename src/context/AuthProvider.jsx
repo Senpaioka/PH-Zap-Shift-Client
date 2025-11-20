@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { AuthContext } from "./AuthContext";
 import {auth} from '../firebase/firebase.config';
 import { useState, useEffect } from "react";
@@ -33,6 +33,16 @@ function AuthProvider({children}) {
 
 
 
+    // logging out user
+    async function logoutUser() {
+
+        try {
+            return await signOut(auth);
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
 
 
 
@@ -61,6 +71,7 @@ function AuthProvider({children}) {
         user,
         isLoading,
         authenticateWithGoogle,
+        logoutUser,
     }
 
 

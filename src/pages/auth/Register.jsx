@@ -1,15 +1,26 @@
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useState, useRef } from 'react';
+import {useAuth} from '../../hooks/useAuth';
 import authImg from '../../assets/images/auth.png';
 import uploadImg from '../../assets/icons/image-upload-icon.png';
 import Logo from '../../components/Logo';
 
 function Register() {
+  
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-
   const [previewImage, setPreviewImage] = useState(null);
   const fileInputRef = useRef(null);
+  const {authenticateWithGoogle} = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  // gmail authentication
+  function registerWithGoogle() {
+    authenticateWithGoogle();
+    navigate(location.state || '/')
+  }
 
   const onSubmit = async (data) => {
     console.log("Form Data:", data);
@@ -206,6 +217,7 @@ function Register() {
             
             {/* Google Sign Up */}
             <button 
+              onClick={registerWithGoogle}
               className="btn bg-base-300 text-black border-gray-300 w-full hover:bg-gray-200 transition-colors"
               type="button"
             >

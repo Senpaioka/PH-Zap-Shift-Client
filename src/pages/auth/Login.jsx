@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { useAuth } from "../../hooks/useAuth";
 import authImg from '../../assets/images/auth.png';
 import Logo from '../../components/Logo';
 
@@ -8,18 +9,22 @@ import Logo from '../../components/Logo';
 function Login() {
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const {authenticateWithGoogle} = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  // gmail authentication
+  function loginWithGoogle() {
+    authenticateWithGoogle();
+    navigate(location.state || '/')
+  }
 
 
   const onSubmit = async (data) => {
     console.log("Login Data:", data);
     // Add your login logic here
     // Example: await loginUser(data);
-  };
-
-
-  const handleGoogleLogin = () => {
-    // Add Google OAuth logic here
-    console.log("Google login clicked");
   };
 
 
@@ -115,7 +120,7 @@ function Login() {
             
             {/* Google Login Button */}
             <button 
-              onClick={handleGoogleLogin}
+              onClick={loginWithGoogle}
               className="btn bg-base-300 text-black border-gray-300 w-full hover:bg-gray-200 transition-colors flex items-center justify-center gap-3"
               type="button"
             >
