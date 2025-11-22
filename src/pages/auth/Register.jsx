@@ -5,19 +5,26 @@ import {useAuth} from '../../hooks/useAuth';
 import authImg from '../../assets/images/auth.png';
 import uploadImg from '../../assets/icons/image-upload-icon.png';
 import Logo from '../../components/Logo';
+import {userRegistrationRequest} from '../../api/userManagement';
+
+
+
 
 function Register() {
   
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, setValue } = useForm();
   const [previewImage, setPreviewImage] = useState(null);
+  const [message, setMessage] = useState('');
   const fileInputRef = useRef(null);
   const {authenticateWithGoogle} = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
 
+
   // gmail authentication
   async function registerWithGoogle() {
+    setMessage('');
     try {
       const result = await authenticateWithGoogle();
       if(result?.user) {
@@ -25,28 +32,26 @@ function Register() {
       }
     }
     catch (error) {
+      setMessage(error.message);
       console.log(error.message, error);
     }
   }
 
-  const onSubmit = async (data) => {
-    console.log("Form Data:", data);
-    // Add your registration logic here
-    // Example: await registerUser(data);
-  };
 
+  // photo upload
   const handleImageChange = (event) => {
+    setMessage('')
     const file = event.target.files[0];
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        setMessage("Please select an image file")
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB');
+        setMessage("Image size should be less than 5MB")
         return;
       }
 
@@ -59,12 +64,33 @@ function Register() {
     }
   };
 
+
+  // remove photo
   const removeImage = () => {
     setPreviewImage(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
+
+
+
+  // manual user registration
+  const onFormSubmit = async (data) => {
+    
+    setMessage('');
+    
+      try {
+        await userRegistrationRequest(data);
+        reset();
+        navigate('/auth');
+      }
+      catch(error) {
+        setMessage(error.message);
+        console.log(error.message);
+      }
+  };
+
 
   
   return (
@@ -80,7 +106,7 @@ function Register() {
             <p className="text-gray-600 mb-8">Register with ZapShift</p>
 
             {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full" noValidate>
+            <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6 w-full" noValidate>
               {/* Image Upload */}
               <div className="flex flex-col items-center">
                 <input type="file" id="imageUpload" accept="image/*" className="hidden"
@@ -98,8 +124,12 @@ function Register() {
                       },
                     },
                   })}
-                  onChange={handleImageChange}
-                  ref={fileInputRef}/>
+                     onChange={(e) => {
+                          handleImageChange(e);     // preview
+                          setValue("image", e.target.files); // Update RHF
+                        }}
+                        ref={fileInputRef}  // your own ref is fine here
+                      />
                 
                 <label htmlFor="imageUpload" className="cursor-pointer w-24 h-24 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center hover:border-primary transition-colors">
                   
@@ -214,6 +244,9 @@ function Register() {
                 Login here
               </Link>
             </p>
+
+            {/* error message  */}
+            <p className="text-base text-red-500">{message}</p>
             
             {/* Divider */}
             <div className="flex items-center my-8">
